@@ -1,33 +1,20 @@
 # rn-wheel-picker-reanimated
 
-A wonderful wheel picker in React Native
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![IOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
 
-## Installation
+A cross-platform wheel picker uses react-native-reanimated 3 implementation.
 
-```sh
-npm install rn-wheel-picker-reanimated
-```
+## Features
 
-## Usage
+- Using FlatList and react-native-reanimated to build this lib so as to optimize the rendering of a list smoothly
+- Being flexible to custom style
+- Animations are built by react-native-reanimated
 
+## Credits
 
-```js
-import { multiply } from 'rn-wheel-picker-reanimated';
+It is not my original idea, thank to the references below that help me do this lib.
 
-// ...
-
-const result = await multiply(3, 7);
-```
-
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
-
-MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+- https://gist.github.com/dungkaka/14742e9518177c9c335af7b09e94dc01
+- https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/the-10-min/src/Picker
