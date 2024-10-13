@@ -15,11 +15,11 @@ export interface WheelPickerProps<T = WheelPickerItemValue> {
   numberOfVisibleRows?: number;
   onChange?: ({ name, value, index }: OnChangeProps) => void;
   flatListProps?: Partial<FlatListProps<WheelPickerItemProps<T>>>;
-  style?: Omit<ViewStyle, 'height'>;
   hasSeparator?: boolean;
   activeColor?: string;
   inactiveColor?: string;
   labelStyle?: TextStyle;
+  style?: Omit<ViewStyle, 'height'>;
 }
 export type OnChangeProps = {
   name?: string;

@@ -23,7 +23,7 @@ interface InternalProps<T> extends WheelPickerItemProps<T> {
   itemStyle?: ViewStyle;
 }
 
-const WheelPickerItem = ({
+const Item = ({
   activeColor = '#000',
   inactiveColor = '#cacaca',
   label,
@@ -80,7 +80,7 @@ const WheelPickerItem = ({
   );
 };
 
-export default memo(WheelPickerItem);
+export default memo(Item);
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',

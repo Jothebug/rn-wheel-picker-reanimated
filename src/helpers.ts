@@ -22,6 +22,24 @@ const ReanimatedFlatList =
     FlatListProps<WheelPickerItemProps<WheelPickerItemValue>>
   >(FlatList);
 
+function isObject(value: any) {
+  return value !== null && typeof value === 'object';
+}
+
+const isNil = (value: any) => {
+  return value === undefined || value === null;
+};
+
+function isEmpty(objectName: any) {
+  return Object.keys(objectName).length === 0;
+}
+
+type UsePresenterProps = {
+  itemHeight: number;
+  data: WheelPickerItemProps<WheelPickerItemValue>[];
+  initialValue: InitialValueProps<WheelPickerItemValue> | any;
+};
+
 const getMiddleIndex = (itemHeight: number, listSize: number) => {
   const valueInRange = (value: number, min: number, max: number) => {
     if (value < min || value === -0) return min;
@@ -35,53 +53,38 @@ const getMiddleIndex = (itemHeight: number, listSize: number) => {
   return _middleIndex;
 };
 
+const getCurrentIndex = ({
+  initialValue,
+  data,
+}: Omit<UsePresenterProps, 'itemHeight'>): number | undefined => {
+  if (isNil(initialValue) || (isObject(initialValue) && isEmpty(initialValue)))
+    return undefined;
+
+  if (isObject(initialValue) && !isEmpty(initialValue)) {
+    return data.findIndex((item) => item.value === initialValue.value);
+  } else {
+    return data.findIndex((item) => item.value === initialValue);
+  }
+};
+
 const usePresenter = ({
   data,
   itemHeight,
-}: {
-  data: WheelPickerItemProps<WheelPickerItemValue>[];
-  itemHeight: number;
-}) => {
+  initialValue,
+}: UsePresenterProps) => {
+  const currentIndex = getCurrentIndex({ initialValue, data });
+
   const middleIndex = getMiddleIndex(itemHeight, data.length);
   const getItemAtOffset = (offset: number): ItemAtOffset => {
     const index = middleIndex(offset);
     const value = data[index]?.value ?? 0;
     return { value, index };
   };
-  return { getItemAtOffset };
-};
 
-function isObject(value: any) {
-  return value !== null && typeof value === 'object';
-}
-
-const isNil = (value: any) => {
-  return value === undefined || value === null;
-};
-
-function isEmpty(objectName: any) {
-  return Object.keys(objectName).length === 0;
-}
-
-const getCurrentIndex = (
-  _initialValue: InitialValueProps<WheelPickerItemValue> | any,
-  data: WheelPickerItemProps<WheelPickerItemValue>[]
-): number | undefined => {
-  if (
-    isNil(_initialValue) ||
-    (isObject(_initialValue) && isEmpty(_initialValue))
-  )
-    return undefined;
-
-  if (isObject(_initialValue) && !isEmpty(_initialValue)) {
-    return data.findIndex((item) => item.value === _initialValue.value);
-  } else {
-    return data.findIndex((item) => item.value === _initialValue);
-  }
+  return { getItemAtOffset, currentIndex };
 };
 
 export {
-  getCurrentIndex,
   ITEM_HEIGHT,
   isAndroid,
   ReanimatedPressable,

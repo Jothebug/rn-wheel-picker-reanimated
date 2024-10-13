@@ -15,14 +15,29 @@ import {
   type WheelPickerItemValue,
   type WheelPickerProps,
 } from './types';
-import WheelPickerItem from './WheelPickerItem';
 import {
-  getCurrentIndex,
   isAndroid,
   ITEM_HEIGHT,
   ReanimatedFlatList,
   usePresenter,
 } from './helpers';
+import Item from './Item';
+
+const styles = StyleSheet.create({
+  flatListContainer: {
+    justifyContent: 'center',
+  },
+  separatorContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    pointerEvents: 'box-none',
+  },
+  separatorStyle: {
+    width: '100%',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+  },
+});
 
 const WheelPicker = ({
   name,
@@ -34,24 +49,22 @@ const WheelPicker = ({
   inactiveColor,
   onChange,
   hasSeparator = true,
+  style,
   ...rest
 }: WheelPickerProps) => {
   const scrollViewRef = useRef<Animated.ScrollView>();
   const offsetY = useSharedValue(0);
   const shouldSkipNextOnChange = useRef(false);
-
   const listHeight = useMemo(
     () => itemHeight * numberOfVisibleRows,
     [itemHeight, numberOfVisibleRows]
   );
-
-  const currentIndex = useMemo(
-    () => getCurrentIndex(initialValue, data),
-    [data, initialValue]
-  );
+  const { currentIndex, getItemAtOffset } = usePresenter({
+    data,
+    itemHeight,
+    initialValue,
+  });
   const prevIndex = useRef(currentIndex);
-  const { getItemAtOffset } = usePresenter({ data, itemHeight });
-
   const scrollHandler = useAnimatedScrollHandler((e) => {
     offsetY.value = e.contentOffset.y / itemHeight;
   });
@@ -157,7 +170,7 @@ const WheelPicker = ({
       index,
     }: ListRenderItemInfo<WheelPickerItemProps<WheelPickerItemValue>>) => {
       return (
-        <WheelPickerItem
+        <Item
           {...item}
           key={index}
           index={index}
@@ -185,7 +198,7 @@ const WheelPicker = ({
 
     return (
       <View style={styles.separatorContainer}>
-        <View style={[styles.separatorStyle, { height: itemHeight / 1.5 }]} />
+        <View style={[styles.separatorStyle, { height: itemHeight }]} />
       </View>
     );
   }, [hasSeparator, itemHeight]);
@@ -201,7 +214,7 @@ const WheelPicker = ({
   );
 
   return (
-    <View style={rest.style}>
+    <View style={style}>
       {renderSeparator}
       <View style={[styles.flatListContainer, { height: listHeight }]}>
         <ReanimatedFlatList
@@ -227,18 +240,3 @@ const WheelPicker = ({
 };
 
 export default memo(WheelPicker);
-const styles = StyleSheet.create({
-  flatListContainer: {
-    justifyContent: 'center',
-  },
-  separatorContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    pointerEvents: 'box-none',
-  },
-  separatorStyle: {
-    width: '100%',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-  },
-});
